@@ -1,0 +1,117 @@
+/* yank — 유튜브 액션 줄에 얹는 MP4 / MP3 버튼 */
+
+.yank-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+  font-family: Pretendard, 'Pretendard Variable', 'Apple SD Gothic Neo',
+               Roboto, 'Noto Sans KR', system-ui, sans-serif;
+}
+
+.yank-btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  white-space: nowrap;
+  font: 500 14px/1 inherit;
+  letter-spacing: -0.01em;
+  color: #fff;
+  background: linear-gradient(135deg, #ff5f6d 0%, #ff8f3f 100%);
+  box-shadow: 0 2px 8px rgba(255, 95, 109, .35);
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+.yank-btn[data-mode="mp3"] {
+  background: linear-gradient(135deg, #7b5cff 0%, #35b8ff 100%);
+  box-shadow: 0 2px 8px rgba(123, 92, 255, .35);
+}
+
+.yank-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: saturate(1.1) brightness(1.05);
+  box-shadow: 0 4px 14px rgba(255, 95, 109, .45);
+}
+.yank-btn[data-mode="mp3"]:hover:not(:disabled) {
+  box-shadow: 0 4px 14px rgba(123, 92, 255, .45);
+}
+.yank-btn:active:not(:disabled) { transform: translateY(0) scale(.98); }
+.yank-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.yank-btn .yank-ico {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+}
+.yank-btn .yank-ico svg { width: 100%; height: 100%; fill: currentColor; }
+.yank-btn .yank-txt { min-width: 34px; text-align: center; }
+
+/* 진행률 — 어둡게 깐 바탕 위로 --p 만큼 밝은 그라디언트가 찬다 */
+.yank-btn[data-state="busy"] {
+  cursor: progress;
+  opacity: 1;
+  background: rgba(0, 0, 0, .35);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .25);
+}
+.yank-btn[data-state="busy"]::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: -1;
+  width: var(--p, 0%);
+  background: linear-gradient(135deg, #ff5f6d 0%, #ff8f3f 100%);
+  transition: width .35s ease;
+}
+.yank-btn[data-mode="mp3"][data-state="busy"]::before {
+  background: linear-gradient(135deg, #7b5cff 0%, #35b8ff 100%);
+}
+.yank-btn[data-state="busy"] .yank-ico { animation: yank-pulse 1.1s ease-in-out infinite; }
+@keyframes yank-pulse { 50% { opacity: .35; } }
+
+.yank-btn[data-state="done"] {
+  background: linear-gradient(135deg, #17c964 0%, #4ade80 100%);
+  box-shadow: 0 2px 8px rgba(23, 201, 100, .4);
+}
+.yank-btn[data-state="error"] {
+  background: linear-gradient(135deg, #8b1f2b 0%, #c0392b 100%);
+  box-shadow: 0 2px 8px rgba(192, 57, 43, .4);
+}
+.yank-btn:disabled { cursor: progress; }
+
+@media (prefers-reduced-motion: reduce) {
+  .yank-btn, .yank-btn::before { transition: none; }
+  .yank-btn[data-state="busy"] .yank-ico { animation: none; }
+}
+
+/* 토스트 */
+.yank-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 2147483647;
+  transform: translate(-50%, 16px);
+  max-width: min(640px, 90vw);
+  padding: 13px 20px;
+  border-radius: 14px;
+  font: 500 14px/1.45 Pretendard, 'Apple SD Gothic Neo', Roboto,
+        'Noto Sans KR', system-ui, sans-serif;
+  color: #fff;
+  background: linear-gradient(135deg, #3b3f6b 0%, #232645 100%);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .38);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+  word-break: break-word;
+}
+.yank-toast.yank-show { opacity: 1; transform: translate(-50%, 0); }
+.yank-toast[data-kind="done"]  { background: linear-gradient(135deg, #12a150 0%, #17c964 100%); }
+.yank-toast[data-kind="error"] { background: linear-gradient(135deg, #a3202e 0%, #e0475b 100%); }

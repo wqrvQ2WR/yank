@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>yank</title>
+<style>
+  :root {
+    --ink: #1c1d2b;
+    --dim: #6b6f8a;
+    --line: #e6e7f2;
+    --grad: linear-gradient(135deg, #7b5cff 0%, #ff5f6d 55%, #ff8f3f 100%);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 300px;
+    padding: 16px;
+    color: var(--ink);
+    background: #fff;
+    font: 400 14px/1.5 Pretendard, 'Apple SD Gothic Neo', Roboto,
+          'Noto Sans KR', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1 {
+    display: inline-block;   /* 그라디언트를 글자 폭에 맞춘다 */
+    font-size: 20px; font-weight: 700; letter-spacing: -.02em;
+    background: var(--grad);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub { font-size: 12px; color: var(--dim); margin-bottom: 14px; }
+  .card {
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px; margin-bottom: 12px;
+  }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .row + .row { margin-top: 10px; }
+  .lbl { font-size: 13px; color: var(--dim); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #c9ccd8; flex: none; }
+  .dot.on  { background: #17c964; box-shadow: 0 0 0 3px rgba(23,201,100,.18); }
+  .dot.off { background: #e0475b; box-shadow: 0 0 0 3px rgba(224,71,91,.18); }
+  #state { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; }
+  #out { font-size: 11px; color: var(--dim); word-break: break-all; margin-top: 8px; }
+  #err {
+    margin-top: 9px; padding: 8px 10px; border-radius: 8px;
+    background: #fdeaec; color: #8c1d2b;
+    font: 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    word-break: break-all;
+  }
+  #retry {
+    margin-top: 10px; width: 100%; padding: 7px; cursor: pointer;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; color: var(--ink); font: 600 13px/1 inherit;
+  }
+  #retry:hover { background: #f7f8fd; }
+  select, input {
+    font: inherit; font-size: 13px; padding: 5px 8px;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; color: var(--ink);
+  }
+  input[type=number] { width: 78px; }
+  .hint { font-size: 12px; color: var(--dim); margin-bottom: 6px; }
+  code {
+    display: block; padding: 9px 10px; border-radius: 8px;
+    background: #f4f5fb; color: #33365a;
+    font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+    word-break: break-all; user-select: all;
+  }
+</style>
+</head>
+<body>
+  <h1>yank</h1>
+  <div class="sub">유튜브 영상 아래 MP4 / MP3 버튼</div>
+
+  <div class="card">
+    <div class="row">
+      <span class="lbl">로컬 서버</span>
+      <span id="state"><span class="dot" id="dot"></span><span id="stateTxt">확인 중</span></span>
+    </div>
+    <div id="out"></div>
+    <div id="err" hidden></div>
+    <button id="retry" type="button">다시 확인</button>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <span class="lbl">MP4 최대 화질</span>
+      <select id="quality">
+        <option value="best">최고 화질</option>
+        <option value="2160">2160p</option>
+        <option value="1440">1440p</option>
+        <option value="1080">1080p</option>
+        <option value="720">720p</option>
+        <option value="480">480p</option>
+      </select>
+    </div>
+    <div class="row">
+      <span class="lbl">서버 포트</span>
+      <input type="number" id="port" min="1" max="65535">
+    </div>
+  </div>
+
+  <div id="startBox" hidden>
+    <div class="hint">터미널에서 서버를 켜:</div>
+    <code id="cmd"></code>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

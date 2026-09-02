@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "yank — 유튜브 mp4/mp3 받기",
+  "version": "1.0.0",
+  "description": "유튜브 영상 아래에 MP4 / MP3 다운로드 버튼을 붙인다. 로컬 yank 서버(yt-dlp + ffmpeg)로 실제 다운로드를 처리한다.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "yank"
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "http://127.0.0.1/*",
+    "http://localhost/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://m.youtube.com/*",
+        "https://music.youtube.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

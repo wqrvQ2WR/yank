@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  yank 서버 자동 실행 (로그인 시).
+
+    cp com.yank.server.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.yank.server.plist
+
+  경로에 홈 디렉터리가 박혀 있으니 다른 계정에서 쓸 거면 hayoonjae 부분을 고칠 것.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.yank.server</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/bin/python3</string>
+    <string>/Users/hayoonjae/Desktop/폴더임/capp/yank/server.py</string>
+  </array>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <!-- yt-dlp / ffmpeg 를 찾으려면 homebrew 경로가 필요하다 -->
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <!-- 없으면 stdout 이 블록 버퍼링돼서 로그 파일이 계속 비어 있다 -->
+    <key>PYTHONUNBUFFERED</key>
+    <string>1</string>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/yank-server.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/yank-server.log</string>
+</dict>
+</plist>
